@@ -8,11 +8,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 @TeleOp(name = "TeleOperated")
 public class TeleOperated extends LinearOpMode {
+    //    boolean intakeInKey = gamepad2.a;
+//    boolean intakeOutKey = gamepad2.b;
+
+//    boolean gateServoOpen = gamepad2.left_bumper;
+//    boolean resetHeading = gamepad1.start;
+//    boolean shooter = gamepad2.y;
 
     double reset_angle = 0;
     Actuators actuator = new Actuators();
     Sensors sensor = new Sensors();
-
+    boolean cd = true;
     double turretPosition;
 
     @Override
@@ -32,10 +38,20 @@ public class TeleOperated extends LinearOpMode {
                 resetAngle();
                 intake();
                 activeShooter();
+                gateServo();
 //                turret();
                 telemetry.update();
             }
         }
+    }
+
+    private void gateServo() {
+        //reversed at 0.22 is good for blocking the exit
+            if (gamepad2.left_bumper) {
+                actuator.gateServo(0.19);
+            } else {
+                actuator.gateServo(0);
+            }
     }
 
     public void drive() {
@@ -56,10 +72,6 @@ public class TeleOperated extends LinearOpMode {
             gyroAngle = gyroAngle - (3 * Math.PI / 2);
         }
         gyroAngle = -1 * gyroAngle;
-
-        if(gamepad1.right_bumper){ //Disables gyro, sets to -Math.PI/2 so front is defined correctly.
-            gyroAngle = -Math.PI/2;
-        }
 
         //Linear directions in case you want to do straight lines.
 //        if(gamepad1.dpad_right){
@@ -133,11 +145,13 @@ public class TeleOperated extends LinearOpMode {
         }
     }
     public void activeShooter() {
+
         if (gamepad2.y) {
-            actuator.activeShooter(1);
+            actuator.activeShooter(1500);  //You may need to change this
         } else {
             actuator.activeShooter(0);
         }
+        telemetry.addData("Shooter Velocity", (actuator.activeShooter.getVelocity()));
     }
 //    public void turret() {
 //        turretPosition = Math.min(Math.max(turretPosition, -214), 214);

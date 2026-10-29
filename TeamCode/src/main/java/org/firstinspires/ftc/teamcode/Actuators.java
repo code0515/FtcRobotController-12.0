@@ -6,6 +6,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -18,7 +19,7 @@ public class Actuators {
     public DcMotor leftBackDrive;
     public DcMotor rightBackDrive;
     public DcMotor intake;
-    public DcMotor activeShooter;
+    public DcMotorEx activeShooter;
     public DcMotor turret;
 
     // TODO: If using servos or continuous servos, add them here (up to 12)
@@ -32,7 +33,7 @@ public class Actuators {
         leftBackDrive = hwMap.get(DcMotor.class, "leftBackDrive");
         rightBackDrive = hwMap.get(DcMotor.class, "rightBackDrive");
         intake = hwMap.get(DcMotor.class, "intake");
-        activeShooter = hwMap.get(DcMotor.class, "activeShooter");
+        activeShooter = hwMap.get(DcMotorEx.class, "activeShooter");
         turret = hwMap.get(DcMotor.class, "turret");
 
         //TODO: Setup motor mode when power is Zero
@@ -81,14 +82,15 @@ public class Actuators {
         intake.setPower(power);
     }
 
-    public void activeShooter(double power) {
-        activeShooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        activeShooter.setPower(power);
+    public void activeShooter(double velocity) {
+        activeShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        activeShooter.setVelocity(velocity);
     }
 
 
     //TODO: Sample classes for powering a servo
     public void gateServo(double position) {
+        gateServo.setDirection(Servo.Direction.REVERSE);
         gateServo.setPosition(position);
     }
 
