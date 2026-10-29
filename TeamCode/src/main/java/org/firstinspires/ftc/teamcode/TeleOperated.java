@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -144,15 +146,46 @@ public class TeleOperated extends LinearOpMode {
             actuator.intake(0);
         }
     }
+
     public void activeShooter() {
 
-        if (gamepad2.y) {
-            actuator.activeShooter(1500);  //You may need to change this
-        } else {
-            actuator.activeShooter(0);
-        }
-        telemetry.addData("Shooter Velocity", (actuator.activeShooter.getVelocity()));
+        // Read the PIDF settings from FTC Dashboard.
+        actuator.updateShooterPIDF();
+
+        // Y button enables the shooter.
+        double targetVelocity = gamepad2.y
+                ? ShooterPIDFConfig.TARGET_VELOCITY
+                : 0;
+
+        actuator.activeShooter(targetVelocity);
+
+        // Measure the actual encoder velocity.
+        double actualVelocity =
+                actuator.activeShooter.getVelocity();
+
+        double velocityError = targetVelocity - actualVelocity;
+
+        // Send values to FTC Dashboard for graphing.
+        TelemetryPacket packet = new TelemetryPacket();
+
+        packet.put("Target Velocity", targetVelocity);
+        packet.put("Actual Velocity", actualVelocity);
+        packet.put("Velocity Error", velocityError);
+
+        FtcDashboard.getInstance().sendTelemetryPacket(packet);
+
+        // Also show useful information on Driver Station.
+        telemetry.addData("Shooter Target", targetVelocity);
+        telemetry.addData("Shooter Actual", actualVelocity);
+        telemetry.addData("Shooter Error", velocityError);
+
+        boolean shooterReady = targetVelocity > 0
+                && Math.abs(velocityError)
+                <= ShooterPIDFConfig.VELOCITY_TOLERANCE;
+
+        telemetry.addData("Shooter Ready", shooterReady);
     }
+
 //    public void turret() {
 //        turretPosition = Math.min(Math.max(turretPosition, -214), 214);
 //        if (gamepad1.dpad_right) {

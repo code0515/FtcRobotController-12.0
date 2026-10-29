@@ -33,7 +33,11 @@ public class Actuators {
         leftBackDrive = hwMap.get(DcMotor.class, "leftBackDrive");
         rightBackDrive = hwMap.get(DcMotor.class, "rightBackDrive");
         intake = hwMap.get(DcMotor.class, "intake");
+
+        // Configure the shooter once during initialization.
         activeShooter = hwMap.get(DcMotorEx.class, "activeShooter");
+        activeShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         turret = hwMap.get(DcMotor.class, "turret");
 
         //TODO: Setup motor mode when power is Zero
@@ -82,11 +86,29 @@ public class Actuators {
         intake.setPower(power);
     }
 
-    public void activeShooter(double velocity) {
-        activeShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        activeShooter.setVelocity(velocity);
+    /**
+     * Update the shooter's built-in velocity PIDF coefficients.
+     *
+     * FTC Dashboard changes these static values while the
+     * robot runs, so we apply them during each update.
+     */
+    public void updateShooterPIDF() {
+        activeShooter.setVelocityPIDFCoefficients(
+                ShooterPIDFConfig.P,
+                ShooterPIDFConfig.I,
+                ShooterPIDFConfig.D,
+                ShooterPIDFConfig.F
+        );
     }
 
+    /**
+     * Set the shooter's target velocity in ticks/second.
+     *
+     * Existing TeleOp and Auto calls still work.
+     */
+    public void activeShooter(double velocity) {
+        activeShooter.setVelocity(velocity);
+    }
 
     //TODO: Sample classes for powering a servo
     public void gateServo(double position) {
