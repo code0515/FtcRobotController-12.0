@@ -178,12 +178,14 @@ public class TeleOperated extends LinearOpMode {
         telemetry.addData("Shooter Target", targetVelocity);
         telemetry.addData("Shooter Actual", actualVelocity);
         telemetry.addData("Shooter Error", velocityError);
+        telemetry.addData("LIVE DASHBOARD TARGET", ShooterPIDFConfig.TARGET_VELOCITY);
 
         boolean shooterReady = targetVelocity > 0
                 && Math.abs(velocityError)
                 <= ShooterPIDFConfig.VELOCITY_TOLERANCE;
 
         telemetry.addData("Shooter Ready", shooterReady);
+
     }
 
 //    public void turret() {
