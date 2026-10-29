@@ -1,10 +1,13 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name = "Left Park Only")
-public class AutoLeftParkOnly extends LinearOpMode {
+import org.firstinspires.ftc.teamcode.Actuators;
+import org.firstinspires.ftc.teamcode.Sensors;
+
+@Autonomous(name = "Right Launch Park")
+public class AutoRightLaunchPark extends LinearOpMode {
 
     Actuators actuator = new Actuators();
     Sensors sensor = new Sensors();
@@ -24,8 +27,25 @@ public class AutoLeftParkOnly extends LinearOpMode {
         if (opModeIsActive()) {
             while (opModeIsActive()) {
                 //do things here
-                driveForward(0.3);
-                sleep(1000);
+
+                shooter(1500);
+                sleep(2000);
+
+                intake(1);
+                sleep(2000);
+
+                shooter(0);
+                intake(0);
+
+                strafeLeft(0.5);
+                sleep(1500);
+
+                driveForward(0.5);
+                sleep(2250);
+
+                strafeLeft(0.5);
+                sleep(900);
+
                 stopMoving();
 
                 break; //stop the code
