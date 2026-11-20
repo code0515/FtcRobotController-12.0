@@ -42,6 +42,7 @@ public class TeleOperated extends LinearOpMode {
                 activeShooter();
                 gateServo();
 //                turret();
+                ramp();
                 telemetry.update();
             }
         }
@@ -55,7 +56,13 @@ public class TeleOperated extends LinearOpMode {
                 actuator.gateServo(0);
             }
     }
-
+    private void ramp() {
+        if (gamepad1.dpad_down) {
+            actuator.rampServo(1);
+        } else {
+            actuator.rampServo(0);
+        }
+    }
     public void drive() {
         double Protate = - gamepad1.right_stick_x;
         double stick_x = - gamepad1.left_stick_x * Math.sqrt(Math.pow(1-Math.abs(Protate), 2) );
@@ -82,12 +89,12 @@ public class TeleOperated extends LinearOpMode {
 //        else if(gamepad1.dpad_left){
 //            stick_x = -0.5;
 //        }
-        if(gamepad1.dpad_up){
-            stick_y = -0.5;
-        }
-        else if(gamepad1.dpad_down){
-            stick_y = 0.5;
-        }
+//        if(gamepad1.dpad_up){
+//            stick_y = -0.5;
+//        }
+//        else if(gamepad1.dpad_down){
+//            stick_y = 0.5;
+//        }
 
         //MOVEMENT
         theta = Math.atan2(stick_y, stick_x) - gyroAngle - (Math.PI / 2);
@@ -193,13 +200,13 @@ public class TeleOperated extends LinearOpMode {
 //        if (gamepad1.dpad_right) {
 //            turretPosition = turretPosition + 1;
 //            actuator.turret.setTargetPosition((int) turretPosition);
-//            actuator.turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                actuator.turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        } else if (gamepad1.dpad_left) {
 //            turretPosition = turretPosition - 1;
 //            actuator.turret.setTargetPosition((int) turretPosition);
 //            actuator.turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        }
-//
+//    }
 //        actuator.turret.setPower(1);
 //        telemetry.addData("turret position",turretPosition);
 //        telemetry.update();

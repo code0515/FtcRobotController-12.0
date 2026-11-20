@@ -24,14 +24,16 @@ public class Actuators {
 
     // TODO: If using servos or continuous servos, add them here (up to 12)
     public Servo gateServo;
+    public Servo rampServo;
     //public CRServo servoContinuous;
 
     public void init(HardwareMap hwMap) {
         // TODO: Put motor hardware here, don't forget to rename deviceNames to match yours
-        leftFrontDrive = hwMap.get(DcMotor.class, "leftFrontDrive");
-        rightFrontDrive = hwMap.get(DcMotor.class, "rightFrontDrive");
-        leftBackDrive = hwMap.get(DcMotor.class, "leftBackDrive");
-        rightBackDrive = hwMap.get(DcMotor.class, "rightBackDrive");
+        rightBackDrive = hwMap.get(DcMotor.class, "backRight");
+        leftFrontDrive = hwMap.get(DcMotor.class, "frontLeft");
+        rightFrontDrive = hwMap.get(DcMotor.class, "frontRight");
+        leftBackDrive = hwMap.get(DcMotor.class, "backLeft");
+
         intake = hwMap.get(DcMotor.class, "intake");
 
         // Configure the shooter once during initialization.
@@ -54,7 +56,8 @@ public class Actuators {
         intake.setDirection(DcMotorSimple.Direction.REVERSE); //or FORWARD
 
         //TODO: Put servo hardware here, don't forget to rename deviceNames to match yours
-        gateServo = hwMap.get(Servo.class, "gateServo");
+        gateServo = hwMap.get(Servo.class, "gate");
+        rampServo = hwMap.get(Servo.class, "ramp");
         //servoContinuous = hwMap.get(CRServo.class, "servoContinuous");
         //TODO: If need to change servo direction
         gateServo.setDirection(Servo.Direction.FORWARD); //or REVERSE
@@ -80,7 +83,10 @@ public class Actuators {
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBackDrive.setPower(power);
     }
-
+    public void rampServo(double position) {
+        gateServo.setDirection(Servo.Direction.REVERSE);
+        gateServo.setPosition(position);
+    }
     public void intake(double power) {
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intake.setPower(power);
